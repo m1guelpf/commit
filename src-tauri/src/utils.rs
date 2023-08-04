@@ -31,16 +31,6 @@ pub fn commit(repo: &Repository, message: &str) -> Result<(), git2::Error> {
 		&parents[..],
 	)?;
 
-	let status = Command::new("git")
-		.arg("push")
-		.current_dir(repo.path())
-		.status()
-		.map_err(|e| git2::Error::from_str(&e.to_string()))?;
-
-	if !status.success() {
-		return Err(git2::Error::from_str("Failed to push"));
-	}
-
 	Ok(())
 }
 

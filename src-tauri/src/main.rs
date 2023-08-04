@@ -1,6 +1,6 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use std::path::PathBuf;
+use std::{path::PathBuf, process::Command};
 
 use git2::Repository;
 use tauri::{
@@ -63,6 +63,25 @@ fn commit(
 		.body("Commit successful!")
 		.show()
 		.unwrap();
+
+	tauri::async_runtime::spawn(async move {
+		let status = Command::new("git")
+			.arg("push")
+			.current_dir(repo.path())
+			.status()
+			.expect("Failed to execute git push");
+
+		let alert = Notification::new(&app.config().tauri.bundle.identifier);
+		if status.success() {
+			alert.title("Push").body("Push successful!")
+		} else {
+			alert
+				.title("Failed to push")
+				.body("Failed to push to remote repository")
+		}
+		.show()
+		.unwrap()
+	});
 
 	Ok(())
 }
