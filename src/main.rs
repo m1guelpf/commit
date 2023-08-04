@@ -135,6 +135,7 @@ fn main() {
 		.on_window_event(|event| {
 			if let WindowEvent::Focused(is_focused) = event.event() {
 				if !is_focused && event.window().is_visible().unwrap() {
+					#[cfg(not(debug_assertions))]
 					handle_window_toggle(&event.window().app_handle()).unwrap();
 				}
 			}

@@ -51,44 +51,47 @@ const Commit = () => {
 	)
 
 	return (
-		<form className="bg-white/[.99] rounded-lg overflow-hidden flex flex-col h-screen" onSubmit={commit}>
+		<form
+			className="bg-white/[.99] dark:bg-black/20 rounded-lg overflow-hidden flex flex-col h-screen"
+			onSubmit={commit}
+		>
 			<AnimatePresence>
 				<div className="flex items-center justify-between px-4 pt-4 pb-2 pr-6">
 					{repo ? (
 						<div className="flex items-center space-x-2">
-							<RepoIcon className="text-black/50 mt-px" />
+							<RepoIcon className="text-black/50 dark:text-white/50 mt-px" />
 
 							<motion.p
 								key="active-repo"
 								initial={{ opacity: 0 }}
 								animate={{ opacity: 1 }}
-								className="font-medium text-black/80"
+								className="font-medium text-black/80 dark:text-white/80"
 							>
 								{repo}
 							</motion.p>
 						</div>
 					) : (
 						<div className="flex items-center space-x-2">
-							<RepoTemplateIcon className="text-black/50 mt-px" />
+							<RepoTemplateIcon className="text-black/50 dark:text-white/50 mt-px" />
 							<motion.p
 								key="loading-repo"
 								exit={{ opacity: 0 }}
 								animate={{ opacity: 1 }}
-								className="font-medium text-transparent animate-pulse bg-neutral-200 rounded-lg"
+								className="font-medium text-transparent animate-pulse bg-neutral-200 dark:bg-white/10 rounded-lg"
 							>
 								tailwindlabs/tailwindcss
 							</motion.p>
 						</div>
 					)}
 					<div className="flex items-center space-x-2">
-						<GitBranchIcon className="text-black/50 mt-px" />
+						<GitBranchIcon className="text-black/50 dark:text-white/50 mt-px" />
 						{branch ? (
 							<motion.p
 								layout
 								key="active-branch"
 								initial={{ opacity: 0 }}
 								animate={{ opacity: 1 }}
-								className="font-medium text-black/80"
+								className="font-medium text-black/80 dark:text-white/80"
 							>
 								{branch}
 							</motion.p>
@@ -98,7 +101,7 @@ const Commit = () => {
 								key="loading-branch"
 								exit={{ opacity: 0 }}
 								animate={{ opacity: 1 }}
-								className="font-medium text-transparent animate-pulse bg-neutral-200 rounded-lg"
+								className="font-medium text-transparent animate-pulse bg-neutral-200 dark:bg-white/10 rounded-lg"
 							>
 								master
 							</motion.p>
@@ -115,7 +118,7 @@ const Commit = () => {
 					ref={titleRef}
 					placeholder="Title"
 					onChange={e => setTitle(e.target.value)}
-					className="text-xl text-black/70 font-medium bg-transparent focus:outline-none p-2 w-full"
+					className="text-xl text-black/70 dark:text-white/80 font-medium bg-transparent focus:outline-none p-2 w-full"
 				/>
 				<textarea
 					value={description}
@@ -126,19 +129,19 @@ const Commit = () => {
 						}
 					}}
 					onChange={e => setDescription(e.target.value)}
-					className="bg-transparent text-black/60 focus:outline-none p-2 w-full no-resize"
+					className="bg-transparent text-black/60 dark:text-white/50 focus:outline-none p-2 w-full no-resize"
 				/>
 			</div>
-			<div className="flex items-center justify-between border-t p-4 bg-white/90">
+			<div className="flex items-center justify-between border-t dark:border-white/5 p-4 bg-white/90 dark:bg-black/10">
 				<div className="flex items-center space-x-4">
-					<p className="text-black/40">
+					<p className="text-black/40 dark:text-white/50">
 						<AnimatePresence mode="popLayout">
 							<motion.span layout>{diff?.files_changed ?? '??'}</motion.span>
 						</AnimatePresence>{' '}
 						file{diff?.files_changed == 1 ? '' : 's'} changed
 					</p>
 
-					<div className="h-6 w-px bg-black/10" />
+					<div className="h-6 w-px bg-black/10 dark:bg-white/5" />
 					<div className="flex items-center space-x-3">
 						<div className="flex items-center space-x-2">
 							<AnimatePresence>
@@ -178,11 +181,13 @@ const Commit = () => {
 				</div>
 				<div>
 					<button
-						className="bg-white border shadow rounded-lg flex items-center space-x-2 py-1 px-2"
+						className="bg-white dark:bg-white/10 border dark:border-white/10 shadow rounded-lg flex items-center space-x-2 py-1 px-2"
 						type="submit"
 					>
-						<p className="font-medium text-black/80">Commit</p>
-						<span className="text-sm rounded border bg-gray-100  px-1 -mx-1 text-black/50">⌘⏎</span>
+						<p className="font-medium text-black/80 dark:text-white/80">Commit</p>
+						<span className="text-sm rounded border dark:border-white/5 bg-gray-100 dark:bg-white/5 px-1 -mx-1 text-black/50 dark:text-white/50">
+							⌘⏎
+						</span>
 					</button>
 				</div>
 			</div>
