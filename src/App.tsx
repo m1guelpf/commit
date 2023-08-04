@@ -133,7 +133,7 @@ const Commit = () => {
 						<AnimatePresence mode="popLayout">
 							<motion.span layout>{diff?.files_changed ?? '??'}</motion.span>
 						</AnimatePresence>{' '}
-						files changed
+						file{diff?.files_changed == 1 ? '' : 's'} changed
 					</p>
 
 					<div className="h-6 w-px bg-black/10" />
