@@ -1,9 +1,9 @@
 use anyhow::anyhow;
 use git2::Repository;
-use tauri::{AppHandle, GlobalWindowEvent, RunEvent, Window, WindowEvent};
+use tauri::{AppHandle, GlobalWindowEvent, Manager, RunEvent, Window, WindowEvent};
 use window_vibrancy::{apply_vibrancy, NSVisualEffectMaterial, NSVisualEffectState};
 
-use crate::utils;
+use crate::{config::GetConfig, utils};
 
 pub fn handler(event: GlobalWindowEvent) {
 	match event.event() {
@@ -37,7 +37,10 @@ pub fn toggle(window: &Window) -> anyhow::Result<()> {
 	} else {
 		let window_handle = window.clone();
 		tauri::async_runtime::spawn(async move {
-			let Some(repo_path) = utils::find_latest_repo(&["/Users/m1guelpf/Code".into()])? else {
+			let app = window_handle.app_handle();
+			let config = app.state::<GetConfig>();
+			let config = config.read().unwrap();
+			let Some(repo_path) = utils::find_latest_repo(&config.repo_paths)? else {
 				window_handle.emit("current_dir", Option::<String>::None)?;
 
 				return Err(anyhow!("No repo found"));

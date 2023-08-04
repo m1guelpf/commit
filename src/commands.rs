@@ -1,9 +1,8 @@
-use std::{path::PathBuf, process::Command};
-
 use git2::Repository;
-use tauri::{api::notification::Notification, AppHandle, Invoke, Window, Wry};
+use std::{path::PathBuf, process::Command};
+use tauri::{api::notification::Notification, AppHandle, Invoke, State, Window, Wry};
 
-use crate::{utils, window};
+use crate::{config::GetConfig, utils, window};
 
 #[tauri::command]
 fn commit(
@@ -12,6 +11,7 @@ fn commit(
 	path: PathBuf,
 	title: String,
 	description: Option<String>,
+	config: State<GetConfig>,
 ) -> Result<(), String> {
 	let repo = Repository::open(path).map_err(|e| e.to_string())?;
 
@@ -31,24 +31,27 @@ fn commit(
 		.show()
 		.unwrap();
 
-	tauri::async_runtime::spawn(async move {
-		let status = Command::new("git")
-			.arg("push")
-			.current_dir(repo.path())
-			.status()
-			.expect("Failed to execute git push");
+	let config = config.read().unwrap();
+	if config.should_push {
+		tauri::async_runtime::spawn(async move {
+			let status = Command::new("git")
+				.arg("push")
+				.current_dir(repo.path())
+				.status()
+				.expect("Failed to execute git push");
 
-		let alert = Notification::new(&app.config().tauri.bundle.identifier);
-		if status.success() {
-			alert.title("Push").body("Push successful!")
-		} else {
-			alert
-				.title("Failed to push")
-				.body("Failed to push to remote repository")
-		}
-		.show()
-		.unwrap()
-	});
+			let alert = Notification::new(&app.config().tauri.bundle.identifier);
+			if status.success() {
+				alert.title("Push").body("Push successful!")
+			} else {
+				alert
+					.title("Failed to push")
+					.body("Failed to push to remote repository")
+			}
+			.show()
+			.unwrap()
+		});
+	}
 
 	Ok(())
 }
