@@ -31,9 +31,9 @@ all = false
 shell = { all = false, open = true }
 
 [tauri.system-tray]
-iconAsTemplate = false
+iconAsTemplate = true
 menuOnLeftClick = false
-iconPath = "icons/icon.png"
+iconPath = "icons/grayscale.png"
 
 [tauri.bundle]
 active = true
