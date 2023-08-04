@@ -1,6 +1,6 @@
 [build]
-distDir = "../dist"
 withGlobalTauri = false
+distDir = "frontend/dist"
 beforeDevCommand = "pnpm dev"
 beforeBuildCommand = "pnpm build"
 devPath = "http://localhost:1420"
