@@ -45,26 +45,24 @@ pub fn get_repo_name(repo: &Repository) -> Option<String> {
 	let remote = repo.find_remote("origin").ok()?;
 	let url = remote.url()?;
 
-	let split_by_colon: Vec<&str> = url.rsplitn(2, ':').collect();
-	let split_by_slash: Vec<String> = if split_by_colon.len() > 1 {
-		// If it's an SSH url, we split the second part by /
-		split_by_colon[0]
-			.rsplitn(2, '/')
-			.map(ToString::to_string)
-			.collect()
-	} else {
-		// If it's an HTTPS url, we remove .git and split by /
-		url.replace(".git", "")
-			.rsplitn(3, '/')
-			.map(ToString::to_string)
-			.collect()
-	};
-
-	if split_by_slash.len() < 2 {
-		return None;
+	let url_parts: Vec<&str> = url.split('/').collect();
+	if url.starts_with("http") && url_parts.len() >= 5 {
+		return Some(format!(
+			"{}/{}",
+			url_parts.get(3)?,
+			url_parts.get(4)?.trim_end_matches(".git")
+		));
 	}
 
-	Some(format!("{}/{}", split_by_slash[1], split_by_slash[0]))
+	if url.contains('@') && url.contains(':') {
+		let url_parts: Vec<&str> = url.split(':').collect();
+
+		return url_parts
+			.get(1)
+			.map(|s| s.trim_end_matches(".git").to_string());
+	}
+
+	None
 }
 
 #[derive(Debug, Clone, serde::Serialize)]
