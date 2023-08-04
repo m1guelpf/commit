@@ -1,0 +1,52 @@
+name: Build
+
+on:
+    push:
+        branches: [main]
+    pull_request:
+
+jobs:
+    build:
+        runs-on: macos-latest
+        steps:
+            - name: 'Checkout the code'
+              uses: actions/checkout@v3
+
+            - name: 🗄️ Setup Rust cache
+              uses: actions/cache@v2
+              with:
+                  key: ${{ hashFiles('Cargo.lock') }}
+                  path: |
+                      ~/.cargo/registry/index
+                      ~/.cargo/registry/cache
+                      ~/.cargo/git
+                      ./target
+
+            - name: 🍃 Install Node.js
+              uses: actions/setup-node@v2
+              with:
+                  node-version: 'lts/*'
+                  cache: pnpm
+                  cache-dependency-path: |
+                      frontend/pnpm-lock.yaml
+
+            - name: 🦀 Install Rust
+              uses: actions-rs/toolchain@v1
+              with:
+                  - toolchain: stable
+
+            - name: 🔌 Install Node.js dependencies
+              run: cd frontend && pnpm install
+
+            - name: 🔌 Download Rust dependencies
+              run: cargo fetch
+
+            - name: Build the app
+              uses: tauri-apps/tauri-action@v0
+
+            - name: 🚀 Upload release artifacts
+              uses: actions/upload-artifact@v2
+              with:
+                  name: release
+                  path: |
+                      target/release/bundle/*
