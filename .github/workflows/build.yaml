@@ -60,6 +60,6 @@ jobs:
             - name: 🚀 Upload release artifacts
               uses: actions/upload-artifact@v3
               with:
-                  name: Commit.dmg
+                  name: Commit.app
                   path: |
                       target/release/bundle/macos/Commit.app
