@@ -1362,8 +1362,6 @@ dependencies = [
  "libc",
  "libgit2-sys",
  "log",
- "openssl-probe",
- "openssl-sys",
  "url",
 ]
 
@@ -1837,9 +1835,7 @@ checksum = "a80df2e11fb4a61f4ba2ab42dbe7f74468da143f1a75c74e11dee7c813f694fa"
 dependencies = [
  "cc",
  "libc",
- "libssh2-sys",
  "libz-sys",
- "openssl-sys",
  "pkg-config",
 ]
 
@@ -1851,20 +1847,6 @@ checksum = "b67380fd3b2fbe7527a606e18729d21c6f3951633d0500574c4dc22d2d638b9f"
 dependencies = [
  "cfg-if",
  "winapi",
-]
-
-[[package]]
-name = "libssh2-sys"
-version = "0.3.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2dc8a030b787e2119a731f1951d6a773e2280c660f8ec4b0f5e1505a386e71ee"
-dependencies = [
- "cc",
- "libc",
- "libz-sys",
- "openssl-sys",
- "pkg-config",
- "vcpkg",
 ]
 
 [[package]]
@@ -2212,24 +2194,6 @@ name = "once_cell"
 version = "1.18.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "dd8b5dd2ae5ed71462c540258bedcb51965123ad7e7ccf4b9a8cafaa4a63576d"
-
-[[package]]
-name = "openssl-probe"
-version = "0.1.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ff011a302c396a5197692431fc1948019154afc178baf7d8e37367442a4601cf"
-
-[[package]]
-name = "openssl-sys"
-version = "0.9.90"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "374533b0e45f3a7ced10fcaeccca020e66656bc03dac384f852e4e5a7a8104a6"
-dependencies = [
- "cc",
- "libc",
- "pkg-config",
- "vcpkg",
-]
 
 [[package]]
 name = "ordered-stream"
