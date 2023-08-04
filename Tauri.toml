@@ -28,12 +28,11 @@ decorations = false
 
 [tauri.allowlist]
 all = false
-shell = { all = false, open = true }
 
 [tauri.system-tray]
 iconAsTemplate = true
 menuOnLeftClick = false
-iconPath = "icons/grayscale.png"
+iconPath = "icons/menubar.png"
 
 [tauri.bundle]
 active = true
