@@ -1,6 +1,6 @@
 #[cfg(debug_assertions)]
-use tauri::SystemTrayMenu;
-use tauri::{AppHandle, CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenuItem};
+use tauri::SystemTrayMenuItem;
+use tauri::{AppHandle, CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu};
 
 use crate::window;
 
