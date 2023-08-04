@@ -84,7 +84,14 @@ pub fn get_diff(repo: &Repository) -> Option<DiffStats> {
 	index.write().unwrap();
 
 	let diff = repo
-		.diff_tree_to_index(None, None, Some(DiffOptions::new().ignore_submodules(true)))
+		.diff_tree_to_index(
+			repo.head()
+				.and_then(|r#ref| r#ref.peel_to_tree())
+				.ok()
+				.as_ref(),
+			None,
+			Some(DiffOptions::new().ignore_submodules(true)),
+		)
 		.ok()?;
 
 	let stats = diff.stats().ok()?;
