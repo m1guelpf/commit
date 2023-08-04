@@ -50,10 +50,16 @@ jobs:
             - name: Build the app
               uses: tauri-apps/tauri-action@v0
 
-            - name: 🚀 Upload release artifacts
-              uses: actions/upload-artifact@v2
+            - name: 🚀 Upload DMG
+              uses: actions/upload-artifact@v3
               with:
-                  name: release
+                  name: Commit.dmg
                   path: |
-                      target/release/bundle/macos/
-                      target/release/bundle/dmg/Commit*
+                      target/release/bundle/dmg/Commit*.dmg
+
+            - name: 🚀 Upload release artifacts
+              uses: actions/upload-artifact@v3
+              with:
+                  name: Commit.dmg
+                  path: |
+                      target/release/bundle/macos/Commit.app
