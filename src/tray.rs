@@ -7,7 +7,7 @@ use crate::window;
 
 pub enum TrayMenu {
 	Quit,
-	#[cfg(not(feature = "custom_protocol"))]
+	#[cfg(debug_assertions)]
 	DevTools,
 }
 
@@ -15,7 +15,7 @@ impl From<TrayMenu> for String {
 	fn from(value: TrayMenu) -> Self {
 		match value {
 			TrayMenu::Quit => "quit".to_string(),
-			#[cfg(not(feature = "custom_protocol"))]
+			#[cfg(debug_assertions)]
 			TrayMenu::DevTools => "devtools".to_string(),
 		}
 	}
@@ -25,7 +25,7 @@ impl From<String> for TrayMenu {
 	fn from(value: String) -> Self {
 		match value.as_str() {
 			"quit" => TrayMenu::Quit,
-			#[cfg(not(feature = "custom_protocol"))]
+			#[cfg(debug_assertions)]
 			"devtools" => TrayMenu::DevTools,
 			_ => unreachable!(),
 		}
@@ -35,7 +35,7 @@ impl From<String> for TrayMenu {
 pub fn build() -> SystemTray {
 	let tray_menu = SystemTrayMenu::new();
 
-	#[cfg(not(feature = "custom_protocol"))]
+	#[cfg(debug_assertions)]
 	let tray_menu = tray_menu
 		.add_item(
 			CustomMenuItem::new(TrayMenu::DevTools, "Open DevTools").accelerator("Cmd+Shift+I"),
@@ -57,7 +57,7 @@ pub fn handle(app: &AppHandle, event: SystemTrayEvent) {
 		},
 		SystemTrayEvent::MenuItemClick { id, .. } => match id.into() {
 			TrayMenu::Quit => std::process::exit(0),
-			#[cfg(not(feature = "custom_protocol"))]
+			#[cfg(debug_assertions)]
 			TrayMenu::DevTools => app.get_window("main").unwrap().open_devtools(),
 		},
 		_ => {},
