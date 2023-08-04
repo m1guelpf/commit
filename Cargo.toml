@@ -19,13 +19,7 @@ serde = { version = "1.0", features = ["derive"] }
 
 [dependencies.tauri]
 version = "1.4"
-features = [
-    "macos-private-api",
-    "system-tray",
-    "config-toml",
-    "global-shortcut",
-    "notification",
-]
+features = ["macos-private-api", "system-tray", "config-toml", "global-shortcut", "notification"]
 
 [features]
 custom-protocol = ["tauri/custom-protocol"]

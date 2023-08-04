@@ -9,7 +9,7 @@ pub fn handler(event: GlobalWindowEvent) {
 	match event.event() {
 		WindowEvent::Focused(is_focused) => {
 			if !is_focused {
-				#[cfg(feature = "custom_protocol")]
+				#[cfg(not(debug_assertions))]
 				toggle(event.window()).unwrap();
 			}
 		},
