@@ -9,7 +9,7 @@ jobs:
     build:
         runs-on: macos-latest
         steps:
-            - name: 'Checkout the code'
+            - name: Checkout the code
               uses: actions/checkout@v3
 
             - name: 🗄️ Setup Rust cache
@@ -21,6 +21,9 @@ jobs:
                       ~/.cargo/registry/cache
                       ~/.cargo/git
                       ./target
+
+            - name: 🍃 Install PNPM
+              uses: pnpm/action-setup@v2
 
             - name: 🍃 Install Node.js
               uses: actions/setup-node@v2
