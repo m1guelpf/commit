@@ -43,7 +43,9 @@ const Commit = () => {
 		(event: FormEvent<HTMLFormElement>) => {
 			event.preventDefault()
 
-			invoke('commit', { path, title, description: description.trim() == '' ? null : description.trim() })
+			invoke('commit', { path, title, description: description.trim() == '' ? null : description.trim() }).catch(
+				error => alert(error)
+			)
 		},
 		[title, description]
 	)

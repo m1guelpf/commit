@@ -1,7 +1,7 @@
 use git2::{DiffOptions, ErrorCode, IndexAddOption, Repository};
 use priority_queue::PriorityQueue;
 use rayon::prelude::*;
-use std::{fs, io, path::PathBuf, time::SystemTime};
+use std::{fs, io, path::PathBuf, process::Command, time::SystemTime};
 use walkdir::{DirEntry, WalkDir};
 
 pub fn commit(repo: &Repository, message: &str) -> Result<(), git2::Error> {
@@ -30,6 +30,16 @@ pub fn commit(repo: &Repository, message: &str) -> Result<(), git2::Error> {
 		&tree,
 		&parents[..],
 	)?;
+
+	let status = Command::new("git")
+		.arg("push")
+		.current_dir(repo.path())
+		.status()
+		.map_err(|e| git2::Error::from_str(&e.to_string()))?;
+
+	if !status.success() {
+		return Err(git2::Error::from_str("Failed to push"));
+	}
 
 	Ok(())
 }

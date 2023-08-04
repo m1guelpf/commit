@@ -4,9 +4,9 @@ use std::path::PathBuf;
 
 use git2::Repository;
 use tauri::{
-	generate_context, ActivationPolicy, AppHandle, Builder as Tauri, CustomMenuItem,
-	GlobalShortcutManager, Manager, RunEvent, SystemTray, SystemTrayEvent, SystemTrayMenu,
-	SystemTrayMenuItem, WindowEvent,
+	api::notification::Notification, generate_context, ActivationPolicy, AppHandle,
+	Builder as Tauri, CustomMenuItem, GlobalShortcutManager, Manager, RunEvent, SystemTray,
+	SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem, WindowEvent,
 };
 use window_vibrancy::{apply_vibrancy, NSVisualEffectMaterial, NSVisualEffectState};
 
@@ -58,6 +58,11 @@ fn commit(
 	.map_err(|e| e.to_string())?;
 
 	handle_window_toggle(&app).unwrap();
+	Notification::new(&app.config().tauri.bundle.identifier)
+		.title("Commit")
+		.body("Commit successful!")
+		.show()
+		.unwrap();
 
 	Ok(())
 }
