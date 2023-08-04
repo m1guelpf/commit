@@ -55,4 +55,5 @@ jobs:
               with:
                   name: release
                   path: |
-                      target/release/bundle/*
+                      target/release/bundle/macos/
+                      target/release/bundle/dmg/Commit*
