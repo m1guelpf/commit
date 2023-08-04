@@ -62,4 +62,4 @@ jobs:
               with:
                   name: Commit.app
                   path: |
-                      target/release/bundle/macos/Commit.app
+                      target/release/bundle/macos/
