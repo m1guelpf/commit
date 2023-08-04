@@ -1,0 +1,45 @@
+{
+	"name": "commit",
+	"private": true,
+	"version": "0.0.0",
+	"type": "module",
+	"scripts": {
+		"dev": "vite",
+		"build": "tsc && vite build",
+		"preview": "vite preview",
+		"tauri": "tauri"
+	},
+	"dependencies": {
+		"@primer/octicons-react": "^19.5.0",
+		"@tauri-apps/api": "^1.4.0",
+		"framer-motion": "^10.15.0",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0"
+	},
+	"devDependencies": {
+		"@tauri-apps/cli": "^1.4.0",
+		"@types/react": "^18.2.15",
+		"@types/react-dom": "^18.2.7",
+		"@vitejs/plugin-react": "^4.0.3",
+		"autoprefixer": "^10.4.14",
+		"postcss": "^8.4.27",
+		"prettier": "^3.0.1",
+		"prettier-plugin-sort-imports-desc": "^1.0.0",
+		"tailwindcss": "^3.3.3",
+		"typescript": "^5.0.2",
+		"vite": "^4.4.4"
+	},
+	"prettier": {
+		"semi": false,
+		"singleQuote": true,
+		"printWidth": 120,
+		"tabWidth": 4,
+		"trailingComma": "es5",
+		"useTabs": true,
+		"bracketSpacing": true,
+		"arrowParens": "avoid",
+		"plugins": [
+			"prettier-plugin-sort-imports-desc"
+		]
+	}
+}

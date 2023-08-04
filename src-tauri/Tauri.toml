@@ -1,0 +1,48 @@
+[build]
+distDir = "../dist"
+withGlobalTauri = false
+beforeDevCommand = "pnpm dev"
+beforeBuildCommand = "pnpm build"
+devPath = "http://localhost:1420"
+
+[package]
+productName = "Commit"
+
+[tauri]
+security = {}
+macOSPrivateApi = true
+
+[[tauri.windows]]
+width = 800
+height = 240
+focus = false
+visible = false
+title = "Commit"
+resizable = false
+alwaysOnTop = true
+fullscreen = false
+transparent = true
+hiddenTitle = true
+skipTaskbar = true
+decorations = false
+
+[tauri.allowlist]
+all = false
+shell = { all = false, open = true }
+
+[tauri.system-tray]
+iconAsTemplate = false
+menuOnLeftClick = false
+iconPath = "icons/icon.png"
+
+[tauri.bundle]
+active = true
+targets = ["app", "dmg"]
+identifier = "build.miguel.commit"
+icon = [
+    "icons/32x32.png",
+    "icons/128x128.png",
+    "icons/128x128@2x.png",
+    "icons/icon.icns",
+    "icons/icon.ico",
+]
