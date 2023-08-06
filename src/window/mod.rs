@@ -26,9 +26,6 @@ pub fn handler(event: GlobalWindowEvent) {
 		},
 		WindowEvent::Focused(is_focused) => {
 			if !is_focused {
-				#[cfg(not(debug_assertions))]
-				toggle(event.window()).unwrap();
-
 				if event.window().label() == MAIN {
 					main_window::on_close(event.window())
 				}
