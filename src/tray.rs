@@ -12,29 +12,6 @@ pub enum TrayMenu {
 	DevTools,
 }
 
-impl From<TrayMenu> for String {
-	fn from(value: TrayMenu) -> Self {
-		match value {
-			TrayMenu::Quit => "quit".to_string(),
-			TrayMenu::Settings => "settings".to_string(),
-			#[cfg(debug_assertions)]
-			TrayMenu::DevTools => "devtools".to_string(),
-		}
-	}
-}
-
-impl From<String> for TrayMenu {
-	fn from(value: String) -> Self {
-		match value.as_str() {
-			"quit" => TrayMenu::Quit,
-			"settings" => TrayMenu::Settings,
-			#[cfg(debug_assertions)]
-			"devtools" => TrayMenu::DevTools,
-			_ => unreachable!(),
-		}
-	}
-}
-
 pub fn build() -> SystemTray {
 	let tray_menu = SystemTrayMenu::new()
 		.add_item(CustomMenuItem::new(TrayMenu::Settings, "Settings...").accelerator("Cmd+,"))
@@ -58,14 +35,37 @@ pub fn build() -> SystemTray {
 pub fn handle(app: &AppHandle, event: SystemTrayEvent) {
 	match event {
 		SystemTrayEvent::LeftClick { .. } => {
-			window::toggle(&app.get_window("main").unwrap()).unwrap()
+			window::show(&app.get_window(window::NAME).unwrap()).unwrap()
 		},
 		SystemTrayEvent::MenuItemClick { id, .. } => match id.into() {
 			TrayMenu::Quit => std::process::exit(0),
 			TrayMenu::Settings => config::edit().unwrap(),
 			#[cfg(debug_assertions)]
-			TrayMenu::DevTools => app.get_window("main").unwrap().open_devtools(),
+			TrayMenu::DevTools => app.get_window(window::NAME).unwrap().open_devtools(),
 		},
 		_ => {},
 	};
+}
+
+impl From<TrayMenu> for String {
+	fn from(value: TrayMenu) -> Self {
+		match value {
+			TrayMenu::Quit => "quit".to_string(),
+			TrayMenu::Settings => "settings".to_string(),
+			#[cfg(debug_assertions)]
+			TrayMenu::DevTools => "devtools".to_string(),
+		}
+	}
+}
+
+impl From<String> for TrayMenu {
+	fn from(value: String) -> Self {
+		match value.as_str() {
+			"quit" => TrayMenu::Quit,
+			"settings" => TrayMenu::Settings,
+			#[cfg(debug_assertions)]
+			"devtools" => TrayMenu::DevTools,
+			_ => unreachable!(),
+		}
+	}
 }

@@ -37,6 +37,7 @@ iconPath = "icons/menubar.png"
 [tauri.bundle]
 active = true
 targets = ["app", "dmg"]
+category = "DeveloperTool"
 identifier = "build.miguel.commit"
 icon = [
     "icons/32x32.png",

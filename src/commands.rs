@@ -24,7 +24,7 @@ fn commit(
 	)
 	.map_err(|e| e.to_string())?;
 
-	window::toggle(&window).unwrap();
+	window::hide(&window).unwrap();
 	Notification::new(&app.config().tauri.bundle.identifier)
 		.title("Commit")
 		.body("Commit successful!")
