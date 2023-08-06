@@ -11,13 +11,18 @@
 	},
 	"dependencies": {
 		"@primer/octicons-react": "^19.5.0",
+		"@radix-ui/react-switch": "^1.0.3",
 		"@tauri-apps/api": "^1.4.0",
+		"class-variance-authority": "^0.7.0",
+		"clsx": "^2.0.0",
 		"framer-motion": "^10.15.0",
 		"react": "^18.2.0",
-		"react-dom": "^18.2.0"
+		"react-dom": "^18.2.0",
+		"tailwind-merge": "^1.14.0"
 	},
 	"devDependencies": {
 		"@tauri-apps/cli": "^1.4.0",
+		"@types/node": "^20.4.8",
 		"@types/react": "^18.2.15",
 		"@types/react-dom": "^18.2.7",
 		"@vitejs/plugin-react": "^4.0.3",

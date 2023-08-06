@@ -28,6 +28,7 @@ decorations = false
 
 [tauri.allowlist]
 all = false
+window = { startDragging = true }
 
 [tauri.system-tray]
 iconAsTemplate = true

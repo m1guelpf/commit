@@ -7,7 +7,7 @@ const useTauriValue = <T>(event: string): T | null => {
 	useTauriReset(() => setValue(null))
 
 	useEffect(() => {
-		const unlisten = listen(event, e => setValue(e.payload as T | null))
+		const unlisten = listen<T | null>(event, e => setValue(e.payload))
 
 		return () => {
 			unlisten.then(f => f())

@@ -1,23 +1,23 @@
 use tauri::{AppHandle, GlobalShortcutManager, Manager, Window};
 
-use crate::{config, window};
+use crate::window;
 
 pub const DEFAULT_SHORTCUT: &str = "Cmd+Alt+Shift+C";
 
 pub fn update_default(
-	window: Window,
+	app: &AppHandle,
 	old_shortcut: &str,
 	new_shortcut: &str,
 ) -> Result<(), tauri::Error> {
-	let app = window.app_handle();
+	let window = app.get_window(window::MAIN).unwrap();
 	let mut shortcuts = app.global_shortcut_manager();
 
 	shortcuts.unregister(old_shortcut)?;
 	shortcuts.register(new_shortcut, move || {
 		if window.is_visible().unwrap() {
-			window::hide(&window).unwrap();
+			window::main_window::hide(&window).unwrap();
 		} else {
-			window::show(&window).unwrap();
+			window::main_window::show(&window).unwrap();
 		}
 	})?;
 
@@ -27,8 +27,10 @@ pub fn update_default(
 pub fn register_settings(app: &AppHandle) -> Result<(), anyhow::Error> {
 	let mut shortcuts = app.global_shortcut_manager();
 
+	let settings_window = window::settings::get(app).unwrap();
 	shortcuts.register("Cmd+,", move || {
-		config::edit().unwrap();
+		settings_window.show().unwrap();
+		settings_window.set_focus().unwrap();
 	})?;
 
 	Ok(())
@@ -47,7 +49,7 @@ pub fn register_escape(window: Window) -> Result<(), tauri::Error> {
 	let mut shortcuts = app.global_shortcut_manager();
 
 	shortcuts.register("Escape", move || {
-		window::hide(&window).unwrap();
+		window::main_window::hide(&window).unwrap();
 	})?;
 
 	Ok(())

@@ -3,15 +3,15 @@
 use anyhow::anyhow;
 use config::{Config, ConfigExt};
 use std::error::Error;
-use tauri::{generate_context, ActivationPolicy, Builder as Tauri, Manager};
-use tauri_plugin_autostart::{self as tauri_autostart, MacosLauncher};
-use tauri_plugin_spotlight::WindowConfig;
+use tauri::{generate_context, ActivationPolicy, Builder as Tauri};
+use tauri_autostart::ManagerExt;
+use tauri_plugin_autostart::{self as tauri_autostart};
 
 mod commands;
 mod config;
+mod repo;
 mod shortcuts;
 mod tray;
-mod utils;
 mod window;
 
 fn main() {
@@ -19,22 +19,13 @@ fn main() {
 
 	let app = Tauri::new()
 		.setup(setup_tauri)
+		.plugin(tray::autostart())
 		.system_tray(tray::build())
+		.plugin(window::spotlight())
 		.manage(config.manage())
 		.on_window_event(window::handler)
 		.invoke_handler(commands::handler())
 		.on_system_tray_event(tray::handle)
-		.plugin(tauri_autostart::init(MacosLauncher::LaunchAgent, None))
-		.plugin(tauri_plugin_spotlight::init(Some(
-			tauri_plugin_spotlight::PluginConfig {
-				windows: Some(vec![WindowConfig {
-					macos_window_level: Some(20),
-					label: String::from(window::NAME),
-					shortcut: String::from(shortcuts::DEFAULT_SHORTCUT),
-				}]),
-				global_close_shortcut: None,
-			},
-		)))
 		.build(generate_context!())
 		.expect("error while running tauri application");
 
@@ -44,13 +35,8 @@ fn main() {
 fn setup_tauri(app: &mut tauri::App) -> Result<(), Box<(dyn Error + 'static)>> {
 	app.set_activation_policy(ActivationPolicy::Accessory);
 
-	let window = app
-		.get_window(window::NAME)
-		.ok_or_else(|| anyhow!("Window not found"))?;
-
-	window::make_transparent(&window).map_err(|_| {
-		anyhow!("Unsupported platform! 'apply_vibrancy' is only supported on macOS")
-	})?;
+	window::settings::create(&app.handle())?;
+	window::main_window::create(&app.handle())?;
 
 	let config = app.user_config();
 	let config = config
@@ -58,7 +44,15 @@ fn setup_tauri(app: &mut tauri::App) -> Result<(), Box<(dyn Error + 'static)>> {
 		.map_err(|_| anyhow!("Failed to read config"))?;
 
 	if config.shortcut != shortcuts::DEFAULT_SHORTCUT {
-		shortcuts::update_default(window, shortcuts::DEFAULT_SHORTCUT, &config.shortcut)?;
+		shortcuts::update_default(&app.handle(), shortcuts::DEFAULT_SHORTCUT, &config.shortcut)?;
+	}
+
+	if config.autostart {
+		let autolaunch = app.autolaunch();
+
+		autolaunch
+			.enable()
+			.map_err(|_| anyhow!("Failed to enable autostart"))?;
 	}
 
 	Ok(())

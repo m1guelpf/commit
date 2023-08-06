@@ -1,9 +1,10 @@
 use tauri::{
-	AppHandle, CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu,
-	SystemTrayMenuItem,
+	plugin::TauriPlugin, AppHandle, CustomMenuItem, Manager, SystemTray, SystemTrayEvent,
+	SystemTrayMenu, SystemTrayMenuItem,
 };
+use tauri_plugin_autostart::MacosLauncher;
 
-use crate::{config, window};
+use crate::window;
 
 pub enum TrayMenu {
 	Quit,
@@ -35,16 +36,24 @@ pub fn build() -> SystemTray {
 pub fn handle(app: &AppHandle, event: SystemTrayEvent) {
 	match event {
 		SystemTrayEvent::LeftClick { .. } => {
-			window::show(&app.get_window(window::NAME).unwrap()).unwrap()
+			window::main_window::show(&app.get_window(window::MAIN).unwrap()).unwrap()
 		},
 		SystemTrayEvent::MenuItemClick { id, .. } => match id.into() {
 			TrayMenu::Quit => std::process::exit(0),
-			TrayMenu::Settings => config::edit().unwrap(),
+			TrayMenu::Settings => {
+				let config_window = app.get_window(window::SETTINGS).unwrap();
+				config_window.show().unwrap();
+				config_window.set_focus().unwrap();
+			},
 			#[cfg(debug_assertions)]
-			TrayMenu::DevTools => app.get_window(window::NAME).unwrap().open_devtools(),
+			TrayMenu::DevTools => app.get_window(window::MAIN).unwrap().open_devtools(),
 		},
 		_ => {},
 	};
+}
+
+pub fn autostart() -> TauriPlugin<tauri::Wry> {
+	tauri_plugin_autostart::init(MacosLauncher::LaunchAgent, None)
 }
 
 impl From<TrayMenu> for String {

@@ -25,13 +25,7 @@ thiserror = "1.0.44"
 
 [dependencies.tauri]
 version = "1.4"
-features = [
-    "macos-private-api",
-    "system-tray",
-    "config-toml",
-    "global-shortcut",
-    "notification",
-]
+features = ["window-start-dragging", "macos-private-api", "system-tray", "config-toml", "global-shortcut", "notification", "dialog"]
 
 [features]
 custom-protocol = ["tauri/custom-protocol"]

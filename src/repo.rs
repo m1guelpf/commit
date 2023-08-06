@@ -1,7 +1,8 @@
+use std::{fs, io, path::PathBuf, time::SystemTime};
+
 use git2::{DiffOptions, ErrorCode, IndexAddOption, Repository};
 use priority_queue::PriorityQueue;
 use rayon::prelude::*;
-use std::{fs, io, path::PathBuf, time::SystemTime};
 use walkdir::{DirEntry, WalkDir};
 
 pub fn commit(repo: &Repository, message: &str) -> Result<(), git2::Error> {
@@ -34,14 +35,14 @@ pub fn commit(repo: &Repository, message: &str) -> Result<(), git2::Error> {
 	Ok(())
 }
 
-pub fn get_branch_name(repo: &Repository) -> Option<String> {
+pub fn branch_name(repo: &Repository) -> Option<String> {
 	let r#ref = repo.find_reference("HEAD").ok()?;
 	let current_branch = r#ref.symbolic_target()?;
 
 	Some(current_branch.replacen("refs/heads/", "", 1))
 }
 
-pub fn get_repo_name(repo: &Repository) -> Option<String> {
+pub fn name(repo: &Repository) -> Option<String> {
 	let remote = repo.find_remote("origin").ok()?;
 	let url = remote.url()?;
 
@@ -72,7 +73,7 @@ pub struct DiffStats {
 	files_changed: usize,
 }
 
-pub fn get_diff(repo: &Repository) -> Option<DiffStats> {
+pub fn diff_changes(repo: &Repository) -> Option<DiffStats> {
 	let mut index = repo.index().ok()?;
 	index
 		.add_all(["."].iter(), IndexAddOption::DEFAULT, None)
@@ -101,7 +102,7 @@ pub fn get_diff(repo: &Repository) -> Option<DiffStats> {
 	})
 }
 
-pub fn find_latest_repo(paths: &[PathBuf]) -> io::Result<Option<PathBuf>> {
+pub fn find_latest(paths: &[PathBuf]) -> io::Result<Option<PathBuf>> {
 	let pq = paths
 		.par_iter()
 		.flat_map(|path| {
@@ -111,7 +112,7 @@ pub fn find_latest_repo(paths: &[PathBuf]) -> io::Result<Option<PathBuf>> {
 				.filter_map(Result::ok)
 				.par_bridge()
 		})
-		.filter_map(process_repo)
+		.filter_map(find_latest_change)
 		.fold(PriorityQueue::new, |mut pq, (path, modified_time)| {
 			pq.push(path, modified_time);
 			pq
@@ -124,7 +125,7 @@ pub fn find_latest_repo(paths: &[PathBuf]) -> io::Result<Option<PathBuf>> {
 	Ok(pq.peek().map(|(path, _)| path.clone()))
 }
 
-fn process_repo(dir: DirEntry) -> Option<(PathBuf, SystemTime)> {
+fn find_latest_change(dir: DirEntry) -> Option<(PathBuf, SystemTime)> {
 	let repo = Repository::open(dir.path()).ok()?;
 
 	let diff = repo

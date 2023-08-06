@@ -1,4 +1,4 @@
-use std::{fs, io, path::PathBuf, process::Command, sync::RwLock};
+use std::{fs, io, path::PathBuf, sync::RwLock};
 
 use anyhow::Result;
 use directories::ProjectDirs;
@@ -17,7 +17,7 @@ pub enum Error {
 	Decoding(#[from] toml::de::Error),
 }
 
-#[derive(Debug, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct Config {
 	pub autostart: bool,
 	pub shortcut: String,
@@ -48,6 +48,15 @@ impl Config {
 		Ok(())
 	}
 
+	pub fn update(&mut self, new_config: Config) -> Result<(), Error> {
+		self.shortcut = new_config.shortcut;
+		self.autostart = new_config.autostart;
+		self.repo_paths = new_config.repo_paths;
+		self.should_push = new_config.should_push;
+
+		self.save()
+	}
+
 	pub fn manage(self) -> RwLock<Self> {
 		RwLock::new(self)
 	}
@@ -68,12 +77,6 @@ impl Default for Config {
 			shortcut: shortcuts::DEFAULT_SHORTCUT.to_string(),
 		}
 	}
-}
-
-pub fn edit() -> Result<()> {
-	Command::new("open").arg(Config::config_path()).status()?;
-
-	Ok(())
 }
 
 pub trait ConfigExt<R: tauri::Runtime> {
