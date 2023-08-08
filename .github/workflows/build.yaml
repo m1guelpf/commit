@@ -15,7 +15,7 @@ jobs:
             - name: 🗄️ Setup Rust cache
               uses: actions/cache@v2
               with:
-                  key: ${{ hashFiles('Cargo.lock') }}
+                  key: rust-cache
                   path: |
                       ~/.cargo/registry/index
                       ~/.cargo/registry/cache

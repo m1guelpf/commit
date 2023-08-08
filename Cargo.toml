@@ -2,7 +2,7 @@
 name = "commit"
 license = "MIT"
 edition = "2021"
-version = "0.0.0"
+version = "1.0.0"
 repository = "https://github.com/m1guelpf/commit"
 authors = ["Miguel Piedrafita <sup@miguel.build>"]
 description = "Open-source Git client for minimalists"
@@ -25,7 +25,15 @@ thiserror = "1.0.44"
 
 [dependencies.tauri]
 version = "1.4"
-features = ["window-start-dragging", "macos-private-api", "system-tray", "config-toml", "global-shortcut", "notification", "dialog"]
+features = [ "updater",
+    "window-start-dragging",
+    "macos-private-api",
+    "system-tray",
+    "config-toml",
+    "global-shortcut",
+    "notification",
+    "dialog",
+]
 
 [features]
 custom-protocol = ["tauri/custom-protocol"]

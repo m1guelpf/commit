@@ -7,7 +7,7 @@ use super::TransparentWindow;
 
 pub fn create(app: &AppHandle) -> anyhow::Result<Window> {
 	let settings_window =
-		WindowBuilder::new(app, window::SETTINGS, WindowUrl::App("settings".into()))
+		WindowBuilder::new(app, window::SETTINGS, WindowUrl::App(Default::default()))
 			.visible(false)
 			.closable(true)
 			.transparent(true)

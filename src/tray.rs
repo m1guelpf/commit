@@ -36,14 +36,19 @@ pub fn build() -> SystemTray {
 pub fn handle(app: &AppHandle, event: SystemTrayEvent) {
 	match event {
 		SystemTrayEvent::LeftClick { .. } => {
-			window::main_window::show(&app.get_window(window::MAIN).unwrap()).unwrap()
+			let main_window = app.get_window(window::MAIN).unwrap();
+			if main_window.is_visible().unwrap() {
+				window::main_window::hide(&main_window).unwrap();
+			} else {
+				window::main_window::show(&main_window).unwrap();
+			}
 		},
 		SystemTrayEvent::MenuItemClick { id, .. } => match id.into() {
 			TrayMenu::Quit => std::process::exit(0),
 			TrayMenu::Settings => {
-				let config_window = app.get_window(window::SETTINGS).unwrap();
-				config_window.show().unwrap();
-				config_window.set_focus().unwrap();
+				let settings_window = app.get_window(window::SETTINGS).unwrap();
+				settings_window.show().unwrap();
+				settings_window.set_focus().unwrap();
 			},
 			#[cfg(debug_assertions)]
 			TrayMenu::DevTools => app.get_window(window::MAIN).unwrap().open_devtools(),

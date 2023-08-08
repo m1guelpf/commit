@@ -36,6 +36,11 @@ pub fn handler(event: GlobalWindowEvent) {
 				api.prevent_close();
 				main_window::hide(event.window()).unwrap();
 			}
+
+			if event.window().label() == SETTINGS {
+				api.prevent_close();
+				event.window().hide().unwrap();
+			}
 		},
 		_ => {},
 	}

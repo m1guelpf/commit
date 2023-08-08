@@ -1,0 +1,78 @@
+name: Release
+
+on:
+    release:
+        types:
+            - created
+
+jobs:
+    build:
+        strategy:
+            fail-fast: false
+            matrix:
+                settings:
+                    - host: macos-latest
+                      name: macOS Intel
+                      target: x86_64-apple-darwin
+                    - host: macos-latest
+                      name: macOS M1
+                      target: aarch64-apple-darwin
+        name: Release (${{ matrix.settings.name }})
+        runs-on: ${{ matrix.settings.host }}
+        steps:
+            - name: Checkout the code
+              uses: actions/checkout@v3
+
+            - name: 🗄️ Setup Rust cache
+              uses: actions/cache@v2
+              with:
+                  key: rust-cache
+                  path: |
+                      ~/.cargo/registry/index
+                      ~/.cargo/registry/cache
+                      ~/.cargo/git
+                      ./target
+
+            - name: 🍃 Install PNPM
+              uses: pnpm/action-setup@v2
+              with:
+                  version: latest
+                  run_install: false
+
+            - name: 🍃 Install Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 'lts/*'
+                  cache: pnpm
+                  cache-dependency-path: |
+                      frontend/pnpm-lock.yaml
+
+            - name: 🦀 Install Rust
+              uses: actions-rs/toolchain@v1
+              with:
+                  toolchain: stable
+                  target: ${{ matrix.settings.target }}
+
+            - name: 🔌 Install Node.js dependencies
+              run: cd frontend && pnpm install
+
+            - name: 🔌 Download Rust dependencies
+              run: cargo fetch
+
+            - name: Build the app
+              uses: tauri-apps/tauri-action@v0
+              with:
+                  releaseId: ${{ github.event.release.id }}
+                  tagName: ${{ github.event.release.tag_name }}
+                  args: --target ${{ matrix.settings.target }} --bundles app,dmg,updater
+              env:
+                  APPLE_ID: ${{ secrets.APPLE_ID }}
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+                  APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+                  TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
+                  TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
+                  ENABLE_CODE_SIGNING: ${{ secrets.APPLE_CERTIFICATE }}
+                  APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+                  APPLE_PROVIDER_SHORT_NAME: ${{ secrets.APPLE_PROVIDER_SHORT_NAME }}
+                  APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
