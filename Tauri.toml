@@ -39,6 +39,7 @@ iconPath = "icons/menubar.png"
 active = true
 targets = ["app", "dmg"]
 category = "DeveloperTool"
+macOS = { license = "LICENSE" }
 identifier = "build.miguel.commit"
 copyright = "Copyright © 2023 Miguel Piedrafita"
 icon = [
