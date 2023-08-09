@@ -1,7 +1,7 @@
 use anyhow::anyhow;
 use tauri::{AppHandle, Manager, TitleBarStyle, Window, WindowBuilder, WindowUrl};
 
-use crate::{config::ConfigExt, window};
+use crate::window;
 
 use super::TransparentWindow;
 
@@ -22,13 +22,6 @@ pub fn create(app: &AppHandle) -> anyhow::Result<Window> {
 	})?;
 
 	Ok(settings_window)
-}
-
-pub fn on_open(window: &Window) {
-	let app = window.app_handle();
-	let config = app.user_config();
-
-	window.emit("config", config.inner()).unwrap();
 }
 
 pub fn get(app: &AppHandle) -> Option<Window> {

@@ -20,6 +20,8 @@ pub enum Error {
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct Config {
 	pub autostart: bool,
+	#[serde(default)]
+	pub first_run: bool,
 	pub shortcut: String,
 	pub should_push: bool,
 	pub repo_paths: Vec<PathBuf>,
@@ -28,6 +30,7 @@ pub struct Config {
 impl Config {
 	pub fn load() -> Result<Self, Error> {
 		let config_path = Self::config_path();
+
 		if config_path.exists() {
 			let config = toml::from_str(&fs::read_to_string(config_path)?)?;
 
@@ -71,6 +74,7 @@ impl Config {
 impl Default for Config {
 	fn default() -> Self {
 		Self {
+			first_run: true,
 			autostart: false,
 			should_push: true,
 			repo_paths: vec![],

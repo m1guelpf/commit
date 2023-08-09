@@ -108,6 +108,13 @@ fn update_config(
 }
 
 #[tauri::command]
+fn get_config(config: State<GetConfig>, window: Window) {
+	let config = config.read().unwrap();
+
+	window.emit("config", config.clone()).unwrap();
+}
+
+#[tauri::command]
 fn select_folder(window: Window) {
 	dialog::FileDialogBuilder::default().pick_folder(move |folder_path| {
 		if let Some(folder_path) = folder_path {
@@ -117,5 +124,5 @@ fn select_folder(window: Window) {
 }
 
 pub fn handler() -> impl Fn(Invoke<Wry>) + Send + Sync + 'static {
-	tauri::generate_handler![commit, update_config, select_folder]
+	tauri::generate_handler![commit, update_config, select_folder, get_config]
 }

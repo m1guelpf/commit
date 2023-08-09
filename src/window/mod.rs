@@ -16,10 +16,6 @@ pub mod settings;
 pub fn handler(event: GlobalWindowEvent) {
 	match event.event() {
 		WindowEvent::Focused(true) => {
-			if event.window().label() == SETTINGS {
-				settings::on_open(event.window());
-			}
-
 			if event.window().label() == MAIN {
 				main_window::on_open(event.window().clone());
 			}

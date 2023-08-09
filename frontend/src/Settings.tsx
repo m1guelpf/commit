@@ -16,6 +16,12 @@ type Config = {
 const Settings = () => {
 	const [config, setConfig] = useState<Config | null>(null)
 
+	useEffect(() => {
+		if (config) return
+
+		requestAnimationFrame(() => invoke('get_config'))
+	}, [config])
+
 	const save = useCallback((newConfig: Config) => {
 		invoke('update_config', { newConfig })
 	}, [])
@@ -36,7 +42,7 @@ const Settings = () => {
 			>
 				<div className="h-full w-16 cursor-pointer" />
 			</div>
-			{config ? (
+			{config && (
 				<div className="p-12 pt-14 space-y-12">
 					<div>
 						<div className="mb-2">
@@ -97,10 +103,6 @@ const Settings = () => {
 							onCheckedChange={should_push => save({ ...config, should_push })}
 						/>
 					</div>
-				</div>
-			) : (
-				<div className="flex items-center justify-center h-full text-black/80 -mt-8 text-6xl font-medium animate-pulse">
-					Click to load!
 				</div>
 			)}
 		</div>
