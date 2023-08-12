@@ -10,6 +10,10 @@
 ## 🔎 About Commit
 Commit is the world's simplest Git client. Open it with a keyboard shortcut, write your commit, and you're done! Commit will automatically detect which repo you've been working on, and even push for you (if you ask it to).
 
+## 🛠️ Development
+
+To run Commit locally, you'll need a local installation of [Rust](https://www.rust-lang.org/) and [pnpm](https://pnpm.io). Once you have both, install the Tauri CLI with `cargo install tauri-cli`, and run `cargo tauri dev` to start the development service, which will auto-reload on any changes.
+
 ## 🙏 Acknowledgements
 
 The idea to build this app came from [TailwindUI's Commit template](https://tailwindui.com/templates/commit), along with the initial design for the widget and the logo.
