@@ -2,7 +2,7 @@
 name = "commit"
 license = "MIT"
 edition = "2021"
-version = "1.0.0"
+version = "1.0.1"
 repository = "https://github.com/m1guelpf/commit"
 authors = ["Miguel Piedrafita <sup@miguel.build>"]
 description = "Open-source Git client for minimalists"

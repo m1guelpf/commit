@@ -1,7 +1,7 @@
 {
 	"name": "commit",
 	"private": true,
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"type": "module",
 	"scripts": {
 		"dev": "vite",
@@ -36,13 +36,13 @@
 	},
 	"prettier": {
 		"semi": false,
-		"singleQuote": true,
-		"printWidth": 120,
 		"tabWidth": 4,
-		"trailingComma": "es5",
 		"useTabs": true,
+		"printWidth": 120,
+		"singleQuote": true,
 		"bracketSpacing": true,
 		"arrowParens": "avoid",
+		"trailingComma": "es5",
 		"plugins": [
 			"prettier-plugin-sort-imports-desc"
 		]
