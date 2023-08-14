@@ -10,6 +10,13 @@
 ## 🔎 About Commit
 Commit is the world's simplest Git client. Open it with a keyboard shortcut, write your commit, and you're done! Commit will automatically detect which repo you've been working on, and even push for you (if you ask it to).
 
+## 📸 Screenshots
+
+![Commit window, dark mode](https://github.com/m1guelpf/commit/assets/23558090/b0727cbf-4807-4549-9eeb-93a8ca10ee98)
+![Commit window, light mode](https://github.com/m1guelpf/commit/assets/23558090/ec6ee4f7-3b1b-499e-b4f1-487994fa9710)
+![Settings window, dark mode](https://github.com/m1guelpf/commit/assets/23558090/6a5b6018-7835-40bb-9e82-2ada9a91cd4a)
+
+
 ## 🛠️ Development
 
 To run Commit locally, you'll need a local installation of [Rust](https://www.rust-lang.org/) and [pnpm](https://pnpm.io). Once you have both, install the Tauri CLI with `cargo install tauri-cli`, and run `cargo tauri dev` to start the development service, which will auto-reload on any changes.
