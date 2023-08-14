@@ -76,8 +76,8 @@ impl Default for Config {
 		Self {
 			first_run: true,
 			autostart: false,
-			should_push: true,
 			repo_paths: vec![],
+			should_push: false,
 			shortcut: shortcuts::DEFAULT_SHORTCUT.to_string(),
 		}
 	}
