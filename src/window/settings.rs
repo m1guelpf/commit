@@ -1,11 +1,14 @@
 use anyhow::anyhow;
-use tauri::{AppHandle, Manager, TitleBarStyle, Window, WindowBuilder, WindowUrl};
+use tauri::{AppHandle, Manager, Window, WindowBuilder, WindowUrl};
+#[cfg(target_os = "macos")]
+use tauri::TitleBarStyle;
 
 use crate::window;
 
 use super::TransparentWindow;
 
 pub fn create(app: &AppHandle) -> anyhow::Result<Window> {
+	#[cfg(target_os = "macos")]
 	let settings_window =
 		WindowBuilder::new(app, window::SETTINGS, WindowUrl::App(Default::default()))
 			.visible(false)
@@ -14,6 +17,18 @@ pub fn create(app: &AppHandle) -> anyhow::Result<Window> {
 			.always_on_top(true)
 			.title("Settings - Commit")
 			.title_bar_style(TitleBarStyle::Overlay)
+			.initialization_script("window.__COMMIT__ = { page: 'settings' };")
+			.build()?;
+
+	// not macos
+	#[cfg(not(target_os = "macos"))]
+	let settings_window =
+		WindowBuilder::new(app, window::SETTINGS, WindowUrl::App(Default::default()))
+			.visible(false)
+			.closable(true)
+			.transparent(true)
+			.always_on_top(true)
+			.title("Settings - Commit")
 			.initialization_script("window.__COMMIT__ = { page: 'settings' };")
 			.build()?;
 

@@ -2,7 +2,12 @@ use tauri::{
 	plugin::TauriPlugin, AppHandle, GlobalWindowEvent, Manager, RunEvent, Window, WindowEvent,
 };
 use tauri_plugin_spotlight::{PluginConfig, WindowConfig};
+
+#[cfg(target_os = "macos")]
 use window_vibrancy::{apply_vibrancy, NSVisualEffectMaterial, NSVisualEffectState};
+
+#[cfg(target_os = "windows")]
+use window_vibrancy::apply_mica;
 
 use crate::shortcuts;
 
@@ -66,11 +71,17 @@ pub trait TransparentWindow {
 
 impl TransparentWindow for Window {
 	fn make_transparent(&self) -> Result<(), window_vibrancy::Error> {
-		apply_vibrancy(
-			self,
-			NSVisualEffectMaterial::HudWindow,
-			Some(NSVisualEffectState::Active),
-			Some(10.0),
-		)
+		{
+			#[cfg(target_os = "macos")]
+			apply_vibrancy(
+				self,
+				NSVisualEffectMaterial::HudWindow,
+				Some(NSVisualEffectState::Active),
+				Some(10.0),
+			)
+		}
+		
+		#[cfg(target_os = "windows")]
+		apply_mica(self, Some(false))
 	}
 }

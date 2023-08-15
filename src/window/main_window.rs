@@ -37,7 +37,9 @@ pub fn hide(window: &Window) -> Result<(), tauri_plugin_spotlight::Error> {
 
 pub fn on_open(window: Window) {
 	shortcuts::register_escape(window.clone()).unwrap();
-	shortcuts::register_settings(&window.app_handle()).unwrap();
+	shortcuts::register_settings(&window.app_handle()).unwrap_or_else(|_| {
+		eprintln!("Failed to register settings shortcut");
+	});
 
 	tauri::async_runtime::spawn(async move {
 		let app = window.app_handle();
