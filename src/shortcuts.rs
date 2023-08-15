@@ -2,7 +2,16 @@ use tauri::{AppHandle, GlobalShortcutManager, Manager, Window};
 
 use crate::window;
 
+// todo: maybe use `cfg-if` crate for many platform-specific stuff
+#[cfg(target_os = "macos")]
 pub const DEFAULT_SHORTCUT: &str = "Cmd+Alt+Shift+C";
+#[cfg(target_os = "macos")]
+pub const SETTINGS_SHORTCUT: &str = "Cmd+,";
+
+#[cfg(target_os = "windows")]
+pub const DEFAULT_SHORTCUT: &str = "Ctrl+Alt+Shift+C";
+#[cfg(target_os = "windows")]
+pub const SETTINGS_SHORTCUT: &str = "Ctrl+Shift+,";
 
 pub fn update_default(
 	app: &AppHandle,
@@ -28,7 +37,7 @@ pub fn register_settings(app: &AppHandle) -> Result<(), anyhow::Error> {
 	let mut shortcuts = app.global_shortcut_manager();
 
 	let settings_window = window::settings::get(app).unwrap();
-	shortcuts.register("Cmd+,", move || {
+	shortcuts.register(SETTINGS_SHORTCUT, move || {
 		settings_window.show().unwrap();
 		settings_window.set_focus().unwrap();
 	})?;
@@ -39,7 +48,7 @@ pub fn register_settings(app: &AppHandle) -> Result<(), anyhow::Error> {
 pub fn unregister_settings(app: &AppHandle) -> Result<(), anyhow::Error> {
 	let mut shortcuts = app.global_shortcut_manager();
 
-	shortcuts.unregister("Cmd+,")?;
+	shortcuts.unregister(SETTINGS_SHORTCUT)?;
 
 	Ok(())
 }
