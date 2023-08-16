@@ -15,13 +15,13 @@ pub enum TrayMenu {
 
 pub fn build() -> SystemTray {
 	let tray_menu = SystemTrayMenu::new()
-		.add_item(CustomMenuItem::new(TrayMenu::Settings, "Settings...").accelerator("Cmd+,"))
+		.add_item(CustomMenuItem::new(TrayMenu::Settings, "Settings...").accelerator("CommandOrControl+,"))
 		.add_native_item(SystemTrayMenuItem::Separator);
 
 	#[cfg(debug_assertions)]
 	let tray_menu = tray_menu
 		.add_item(
-			CustomMenuItem::new(TrayMenu::DevTools, "Open DevTools").accelerator("Cmd+Shift+I"),
+			CustomMenuItem::new(TrayMenu::DevTools, "Open DevTools").accelerator("CommandOrControl+Shift+I"),
 		)
 		.add_native_item(SystemTrayMenuItem::Separator);
 

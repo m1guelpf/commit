@@ -7,7 +7,7 @@ use tauri_plugin_spotlight::{PluginConfig, WindowConfig};
 use window_vibrancy::{apply_vibrancy, NSVisualEffectMaterial, NSVisualEffectState};
 
 #[cfg(target_os = "windows")]
-use window_vibrancy::apply_blur;
+use window_vibrancy::apply_mica;
 
 use crate::shortcuts;
 
@@ -83,6 +83,6 @@ impl TransparentWindow for Window {
 		
 		// not working
 		#[cfg(target_os = "windows")]
-		apply_blur(self, Some((18, 18, 18, 125)))
+		apply_mica(self, Some(false))
 	}
 }
