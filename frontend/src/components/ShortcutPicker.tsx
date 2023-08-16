@@ -28,10 +28,6 @@ const ShortcutPicker: FC<Props> = ({ value, onChange }) => {
 		setShortcut(parseShortcut(value))
 	}, [value])
 
-	// useEffect(() => {
-	// 	onChange(buildShortcut(shortcut))
-	// }, [shortcut])
-
 	const handleKeyDown = useCallback(
 		(event: KeyboardEvent<HTMLDivElement>) => {
 			event.preventDefault()
@@ -75,10 +71,10 @@ const parseShortcut = (shortcut: string): ParsedShortcut => {
 
 	return {
 		isAlt: parts.includes('Alt'),
-		isCmd: parts.includes('Cmd'),
 		isCtrl: parts.includes('Ctrl'),
 		isShift: parts.includes('Shift'),
 		natural: parts[parts.length - 1].toUpperCase(),
+		isCmd: parts.includes('CommandOrControl') || parts.includes('Cmd'),
 	}
 }
 
@@ -100,10 +96,10 @@ const displayShortcut = (shortcut: ParsedShortcut): string => {
 const buildShortcut = (shortcut: ParsedShortcut): string => {
 	let parts = []
 
-	if (shortcut.isCmd) parts.push('Cmd')
 	if (shortcut.isAlt) parts.push('Alt')
 	if (shortcut.isCtrl) parts.push('Ctrl')
 	if (shortcut.isShift) parts.push('Shift')
+	if (shortcut.isCmd) parts.push('CommandOrControl')
 
 	parts.push(shortcut.natural.toUpperCase())
 

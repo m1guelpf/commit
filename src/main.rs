@@ -3,7 +3,11 @@
 use anyhow::anyhow;
 use config::{Config, ConfigExt};
 use std::error::Error;
-use tauri::{generate_context, ActivationPolicy, Builder as Tauri};
+use tauri::{generate_context, Builder as Tauri};
+
+#[cfg(target_os = "macos")]
+use tauri::ActivationPolicy;
+
 use tauri_autostart::ManagerExt;
 use tauri_plugin_autostart::{self as tauri_autostart};
 
@@ -33,6 +37,7 @@ fn main() {
 }
 
 fn setup_tauri(app: &mut tauri::App) -> Result<(), Box<(dyn Error + 'static)>> {
+	#[cfg(target_os = "macos")]
 	app.set_activation_policy(ActivationPolicy::Accessory);
 
 	window::main_window::create(&app.handle())?;

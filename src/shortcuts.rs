@@ -2,7 +2,8 @@ use tauri::{AppHandle, GlobalShortcutManager, Manager, Window};
 
 use crate::window;
 
-pub const DEFAULT_SHORTCUT: &str = "Cmd+Alt+Shift+C";
+pub const DEFAULT_SHORTCUT: &str = "CommandOrControl+Alt+Shift+C";
+pub const SETTINGS_SHORTCUT: &str = "CommandOrControl+,";
 
 pub fn update_default(
 	app: &AppHandle,
@@ -28,7 +29,7 @@ pub fn register_settings(app: &AppHandle) -> Result<(), anyhow::Error> {
 	let mut shortcuts = app.global_shortcut_manager();
 
 	let settings_window = window::settings::get(app).unwrap();
-	shortcuts.register("Cmd+,", move || {
+	shortcuts.register(SETTINGS_SHORTCUT, move || {
 		settings_window.show().unwrap();
 		settings_window.set_focus().unwrap();
 	})?;
@@ -39,7 +40,7 @@ pub fn register_settings(app: &AppHandle) -> Result<(), anyhow::Error> {
 pub fn unregister_settings(app: &AppHandle) -> Result<(), anyhow::Error> {
 	let mut shortcuts = app.global_shortcut_manager();
 
-	shortcuts.unregister("Cmd+,")?;
+	shortcuts.unregister(SETTINGS_SHORTCUT)?;
 
 	Ok(())
 }

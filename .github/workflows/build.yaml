@@ -7,7 +7,18 @@ on:
 
 jobs:
     build:
-        runs-on: macos-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                settings:
+                    - host: macos-latest
+                      name: macOS
+                      targets: app,dmg
+                    - host: windows-latest
+                      name: Windows
+                      targets: msi,nsis
+        name: Build for ${{ matrix.settings.name }}
+        runs-on: ${{ matrix.settings.host }}
         steps:
             - name: Checkout the code
               uses: actions/checkout@v3
@@ -49,17 +60,37 @@ jobs:
 
             - name: Build the app
               uses: tauri-apps/tauri-action@v0
+              with:
+                  args: --bundles ${{ matrix.settings.targets }}
 
             - name: 🚀 Upload macOS dmg
+              if: matrix.settings.host == 'macos-latest'
               uses: actions/upload-artifact@v3
               with:
                   name: Commit.dmg
                   path: |
                       target/release/bundle/dmg/Commit*.dmg
 
-            - name: 🚀 Upload macOS App
+            - name: 🚀 Upload macOS app
+              if: matrix.settings.host == 'macos-latest'
               uses: actions/upload-artifact@v3
               with:
                   name: Commit.app
                   path: |
                       target/release/bundle/macos/
+
+            - name: 🚀 Upload Windows NSIS
+              if: matrix.settings.host == 'windows-latest'
+              uses: actions/upload-artifact@v3
+              with:
+                  name: Commit.exe
+                  path: |
+                      target/release/bundle/nsis/Commit*.exe
+
+            - name: 🚀 Upload Windows MSI
+              if: matrix.settings.host == 'windows-latest'
+              uses: actions/upload-artifact@v3
+              with:
+                  name: Commit.msi
+                  path: |
+                      target/release/bundle/msi/Commit*.msi
