@@ -2,16 +2,8 @@ use tauri::{AppHandle, GlobalShortcutManager, Manager, Window};
 
 use crate::window;
 
-// todo: maybe use `cfg-if` crate for many platform-specific stuff
-#[cfg(target_os = "macos")]
-pub const DEFAULT_SHORTCUT: &str = "Cmd+Alt+Shift+C";
-#[cfg(target_os = "macos")]
-pub const SETTINGS_SHORTCUT: &str = "Cmd+,";
-
-#[cfg(target_os = "windows")]
-pub const DEFAULT_SHORTCUT: &str = "Ctrl+Alt+Shift+C";
-#[cfg(target_os = "windows")]
-pub const SETTINGS_SHORTCUT: &str = "Ctrl+Shift+,";
+pub const DEFAULT_SHORTCUT: &str = "CommandOrControl+Alt+Shift+C";
+pub const SETTINGS_SHORTCUT: &str = "CommandOrControl+,";
 
 pub fn update_default(
 	app: &AppHandle,
