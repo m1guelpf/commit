@@ -91,6 +91,6 @@ jobs:
               if: matrix.settings.host == 'windows-latest'
               uses: actions/upload-artifact@v3
               with:
-                  name: Commit.exe
+                  name: Commit.msi
                   path: |
                       target/release/bundle/msi/Commit*.msi
