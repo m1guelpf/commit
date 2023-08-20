@@ -31,7 +31,7 @@ fn commit(
 	)
 	.map_err(|e| e.to_string())?;
 
-	window::main_window::hide(&window).unwrap();
+	window::main_window::hide(&window);
 	Notification::new(&app.config().tauri.bundle.identifier)
 		.title("Commit")
 		.body("Commit successful!")
@@ -124,5 +124,12 @@ fn select_folder(window: Window) {
 }
 
 pub fn handler() -> impl Fn(Invoke<Wry>) + Send + Sync + 'static {
-	tauri::generate_handler![commit, update_config, select_folder, get_config]
+	tauri::generate_handler![
+		commit,
+		update_config,
+		select_folder,
+		get_config,
+		window::ns_panel::show_app,
+		window::ns_panel::hide_app
+	]
 }

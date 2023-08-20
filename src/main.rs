@@ -2,6 +2,7 @@
 
 use anyhow::anyhow;
 use config::{Config, ConfigExt};
+use window::ns_panel::init_ns_panel;
 use std::error::Error;
 use tauri::{generate_context, ActivationPolicy, Builder as Tauri};
 use tauri_autostart::ManagerExt;
@@ -19,9 +20,9 @@ fn main() {
 
 	let app = Tauri::new()
 		.setup(setup_tauri)
+        .manage(window::ns_panel::State::default())
 		.plugin(tray::autostart())
 		.system_tray(tray::build())
-		.plugin(window::spotlight())
 		.manage(config.manage())
 		.on_window_event(window::handler)
 		.invoke_handler(commands::handler())
@@ -35,7 +36,7 @@ fn main() {
 fn setup_tauri(app: &mut tauri::App) -> Result<(), Box<(dyn Error + 'static)>> {
 	app.set_activation_policy(ActivationPolicy::Accessory);
 
-	window::main_window::create(&app.handle())?;
+	let app_window = window::main_window::create(&app.handle())?;
 	let settings_window = window::settings::create(&app.handle())?;
 
 	let config = app.user_config();
@@ -43,13 +44,14 @@ fn setup_tauri(app: &mut tauri::App) -> Result<(), Box<(dyn Error + 'static)>> {
 		.read()
 		.map_err(|_| anyhow!("Failed to read config"))?;
 
-	if config_r.shortcut != shortcuts::DEFAULT_SHORTCUT {
-		shortcuts::update_default(
-			&app.handle(),
-			shortcuts::DEFAULT_SHORTCUT,
-			&config_r.shortcut,
-		)?;
-	}
+	init_ns_panel(&app.handle(), &app_window, &config_r.shortcut);
+	// if config_r.shortcut != shortcuts::DEFAULT_SHORTCUT {
+	// 	shortcuts::update_default(
+	// 		&app.handle(),
+	// 		shortcuts::DEFAULT_SHORTCUT,
+	// 		&config_r.shortcut,
+	// 	)?;
+	// }
 
 	if config_r.autostart {
 		let autolaunch = app.autolaunch();

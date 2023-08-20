@@ -525,8 +525,14 @@ name = "commit"
 version = "1.0.2"
 dependencies = [
  "anyhow",
+ "cocoa 0.24.1",
+ "core-foundation",
+ "core-graphics 0.22.3",
  "directories",
  "git2",
+ "objc",
+ "objc-foundation",
+ "objc_id",
  "priority-queue",
  "rayon",
  "serde",
@@ -534,7 +540,6 @@ dependencies = [
  "tauri",
  "tauri-build",
  "tauri-plugin-autostart",
- "tauri-plugin-spotlight",
  "thiserror",
  "toml 0.7.6",
  "walkdir",
@@ -3654,18 +3659,6 @@ dependencies = [
  "serde_json",
  "tauri",
  "thiserror",
-]
-
-[[package]]
-name = "tauri-plugin-spotlight"
-version = "0.1.2"
-source = "git+https://github.com/zzzze/tauri-plugin-spotlight#fe00f26b6053058be113142df4032bab3120ac0e"
-dependencies = [
- "cocoa 0.24.1",
- "objc",
- "serde",
- "serde_json",
- "tauri",
 ]
 
 [[package]]
