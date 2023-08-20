@@ -38,9 +38,9 @@ pub fn handle(app: &AppHandle, event: SystemTrayEvent) {
 		SystemTrayEvent::LeftClick { .. } => {
 			let main_window = app.get_window(window::MAIN).unwrap();
 			if main_window.is_visible().unwrap() {
-				window::main_window::hide(&main_window).unwrap();
+				window::main_window::hide(&main_window);
 			} else {
-				window::main_window::show(&main_window).unwrap();
+				window::main_window::show(&main_window);
 			}
 		},
 		SystemTrayEvent::MenuItemClick { id, .. } => match id.into() {

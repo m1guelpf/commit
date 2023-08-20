@@ -1,13 +1,14 @@
 use anyhow::anyhow;
 use git2::Repository;
 use tauri::{api::notification::Notification, AppHandle, Manager, Window};
-use tauri_plugin_spotlight::ManagerExt as SpotlightExt;
 
 use crate::{
 	config::ConfigExt,
 	repo, shortcuts,
 	window::{self, TransparentWindow},
 };
+
+use super::ns_panel;
 
 pub fn create(app: &AppHandle) -> anyhow::Result<Window> {
 	let main_window = app
@@ -21,18 +22,14 @@ pub fn create(app: &AppHandle) -> anyhow::Result<Window> {
 	Ok(main_window)
 }
 
-pub fn show(window: &Window) -> Result<(), tauri_plugin_spotlight::Error> {
-	let app = window.app_handle();
-	let spotlight = app.spotlight();
-
-	spotlight.show(window)
+pub fn show(window: &Window) {
+	let app: AppHandle = window.app_handle();
+	ns_panel::show_app(app)
 }
 
-pub fn hide(window: &Window) -> Result<(), tauri_plugin_spotlight::Error> {
+pub fn hide(window: &Window) {
 	let app = window.app_handle();
-	let spotlight = app.spotlight();
-
-	spotlight.hide(window)
+	ns_panel::hide_app(app)
 }
 
 pub fn on_open(window: Window) {

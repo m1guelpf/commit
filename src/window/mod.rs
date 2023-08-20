@@ -1,16 +1,14 @@
 use tauri::{
-	plugin::TauriPlugin, AppHandle, GlobalWindowEvent, Manager, RunEvent, Window, WindowEvent,
+	AppHandle, GlobalWindowEvent, Manager, RunEvent, Window, WindowEvent,
 };
-use tauri_plugin_spotlight::{PluginConfig, WindowConfig};
 use window_vibrancy::{apply_vibrancy, NSVisualEffectMaterial, NSVisualEffectState};
-
-use crate::shortcuts;
 
 pub const MAIN: &str = "main";
 pub const SETTINGS: &str = "settings";
 
 pub mod main_window;
 pub mod settings;
+pub mod ns_panel;
 
 #[allow(clippy::collapsible_if)]
 pub fn handler(event: GlobalWindowEvent) {
@@ -30,7 +28,7 @@ pub fn handler(event: GlobalWindowEvent) {
 		WindowEvent::CloseRequested { api, .. } => {
 			if event.window().label() == MAIN {
 				api.prevent_close();
-				main_window::hide(event.window()).unwrap();
+				main_window::hide(event.window());
 			}
 
 			if event.window().label() == SETTINGS {
@@ -45,19 +43,8 @@ pub fn handler(event: GlobalWindowEvent) {
 pub fn prevent_exit(app: &AppHandle, event: RunEvent) {
 	if let tauri::RunEvent::ExitRequested { api, .. } = event {
 		api.prevent_exit();
-		main_window::hide(&app.get_window(MAIN).unwrap()).unwrap();
+		main_window::hide(&app.get_window(MAIN).unwrap());
 	}
-}
-
-pub fn spotlight() -> TauriPlugin<tauri::Wry, Option<PluginConfig>> {
-	tauri_plugin_spotlight::init(Some(tauri_plugin_spotlight::PluginConfig {
-		windows: Some(vec![WindowConfig {
-			label: String::from(MAIN),
-			macos_window_level: Some(20),
-			shortcut: String::from(shortcuts::DEFAULT_SHORTCUT),
-		}]),
-		global_close_shortcut: None,
-	}))
 }
 
 pub trait TransparentWindow {

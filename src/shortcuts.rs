@@ -15,9 +15,9 @@ pub fn update_default(
 	shortcuts.unregister(old_shortcut)?;
 	shortcuts.register(new_shortcut, move || {
 		if window.is_visible().unwrap() {
-			window::main_window::hide(&window).unwrap();
+			window::main_window::hide(&window);
 		} else {
-			window::main_window::show(&window).unwrap();
+			window::main_window::show(&window);
 		}
 	})?;
 
@@ -29,6 +29,7 @@ pub fn register_settings(app: &AppHandle) -> Result<(), anyhow::Error> {
 
 	let settings_window = window::settings::get(app).unwrap();
 	shortcuts.register("Cmd+,", move || {
+		print!("Cmd+,");
 		settings_window.show().unwrap();
 		settings_window.set_focus().unwrap();
 	})?;
@@ -49,7 +50,7 @@ pub fn register_escape(window: Window) -> Result<(), tauri::Error> {
 	let mut shortcuts = app.global_shortcut_manager();
 
 	shortcuts.register("Escape", move || {
-		window::main_window::hide(&window).unwrap();
+		window::main_window::hide(&window);
 	})?;
 
 	Ok(())
